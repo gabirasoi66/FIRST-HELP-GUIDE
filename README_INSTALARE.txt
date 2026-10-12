@@ -1,12 +1,13 @@
-FIRST HELP GUIDE V1.20 — PWA Android
+FIRST HELP GUIDE V1.21 — Actualizare PWA Android / GitHub Pages
 
-1. NU șterge versiunea V1.19 și NU șterge datele Chrome.
-2. Din V1.19: Istoric > Exportă backup cu fotografii. Apoi Verifică backup și fotografii, verificând toate imaginile.
-3. Publică TOATE fișierele din acest director la rădăcina aceluiași site HTTPS (de exemplu Netlify Drop, dacă ai acces gratuit). Nu încărca doar index.html.
-4. Deschide adresa HTTPS în Chrome Android. Meniu ⋮ > Adaugă pe ecranul de pornire / Instalează aplicația.
-5. Deschide aplicația instalată; Istoric > Importă backup și selectează fișierul JSON exportat. Confirmă doar după ce verifici numărul cazurilor.
-6. Verifică toate cazurile, observațiile și fotografiile. Păstrează V1.19 și JSON până când verificarea este completă.
+1. În aplicația V1.20, intră în Istoric → Backup, restaurare și migrare.
+2. Exportă backupul JSON și folosește „Verifică backup și fotografii”. Păstrează fișierul în siguranță.
+3. În GitHub, în același depozit FIRST-HELP-GUIDE și pe ramura main, înlocuiește index.html și sw.js cu fișierele V1.21. Celelalte fișiere rămân identice; poți încărca toate cele 6 fișiere dacă preferi.
+4. Așteaptă publicarea GitHub Pages, apoi redeschide aplicația instalată. La nevoie, închide-o complet și redeschide-o pentru a primi noua versiune.
+5. Verifică în Profil că apare V1.21, apoi verifică istoricul, cazurile și fotografiile.
 
-IMPORTANT: Datele localStorage din content:// NU sunt transferate automat în PWA HTTPS. Importul nu suprascrie ID-uri existente. Dacă versiunea HTTPS conține deja cazuri cu aceleași ID-uri, importul le va ignora.
+IMPORTANT: Nu șterge aplicația, datele site-ului sau memoria browserului. Datele sunt locale și legate de originea/adresa site-ului. Instalarea pe altă adresă necesită importul backupului.
 
-Limitări: PWA necesită HTTPS pentru instalare și cache offline; deschiderea index.html din ZIP/content:// NU instalează PWA. Analiza AI a imaginilor nu este implementată. Verificarea funcțională pe telefon și restaurarea într-o instalare nouă rămân de făcut.
+Modificări V1.21: confirmarea scrierii în localStorage; revenire la starea anterioară la eșecul salvării pentru ștergerea unui caz și adăugarea unui memento; confirmare mai explicită la ștergerea tuturor datelor; actualizarea cache-ului PWA.
+
+Limitări: această versiune nu introduce analiză AI a fotografiilor și nu activează notificări reale de memento. Nu există sincronizare cloud automată.

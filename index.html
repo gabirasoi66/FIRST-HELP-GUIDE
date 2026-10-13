@@ -1,6 +1,6 @@
 <!doctype html><html lang="ro"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b6f54"><meta name="application-name" content="FIRST HELP GUIDE"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png"><title>FIRST HELP GUIDE V1.21</title>
+<meta name="theme-color" content="#0b6f54"><meta name="application-name" content="FIRST HELP GUIDE"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png"><title>FIRST HELP GUIDE V1.22</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#d9f0ff;font-family:Arial,system-ui,sans-serif;color:#123a32}
 .app{max-width:480px;margin:auto;background:#fffdf8;min-height:100dvh;overflow:hidden}
@@ -138,7 +138,7 @@ function importCases(file){
   const existing=st.cases.length;
   const knownReminders=new Set(st.reminders.map(r=>JSON.stringify([r.text,r.date])));
   const newReminders=d.reminders.filter(r=>!knownReminders.has(JSON.stringify([r.text,r.date])));
-  const message='V1.21 — verificare completă a backupului\n\nCazuri în fișier: '+d.cases.length+'\nCazuri existente: '+existing+'\nCazuri noi: '+fresh.length+'\nID-uri existente, păstrate nemodificate: '+duplicates+'\nFotografii verificate: '+photoTotal(d.cases)+'\nMementouri noi: '+newReminders.length+'\n\nOK = adaugă numai datele noi.\nAnulează = nu modifica nimic.';
+  const message='V1.22 — verificare completă a backupului\n\nCazuri în fișier: '+d.cases.length+'\nCazuri existente: '+existing+'\nCazuri noi: '+fresh.length+'\nID-uri existente, păstrate nemodificate: '+duplicates+'\nFotografii verificate: '+photoTotal(d.cases)+'\nMementouri noi: '+newReminders.length+'\n\nOK = adaugă numai datele noi.\nAnulează = nu modifica nimic.';
   if(!confirm(message))return;
   const previousCases=st.cases,previousReminders=st.reminders;
   st.cases=[...previousCases,...fresh];
@@ -209,13 +209,27 @@ async function analyzeCasePhotoAI(c){
   save();render();
  }catch(e){alert('Analiza nu a putut fi efectuată: '+e.message);if(btn){btn.disabled=false;btn.textContent='ANALIZEAZĂ FOTOGRAFIA';}}
 }
+function practicalChecklist(c){
+ const fridge=c.kind==='fridge';
+ return `<div class="note" style="margin-top:14px"><b>Listă practică de verificare · V1.22</b><ul style="padding-left:22px;line-height:1.65">${(fridge?[
+ 'Verifică dacă ușa se închide complet și garnitura este vizibil întreagă.',
+ 'Asigură-te că grilele de ventilație nu sunt obturate; nu demonta panouri.',
+ 'Măsoară temperatura cu un termometru potrivit; nu te baza doar pe zgomotul compresorului.',
+ 'Dacă alimentele perisabile s-au încălzit, evaluează siguranța lor înainte de consum.'
+ ]:[
+ 'Verifică dacă un obiect împiedică închiderea, fără a forța ușa.',
+ 'Observă dacă tocul, broasca sau balamalele par deteriorate, fără demontare.',
+ 'Nu interveni asupra unei uși de evacuare ori asupra unei încuietori blocate.',
+ 'Dacă problema persistă sau există risc de blocare, contactează un specialist.'
+ ]).map(item=>`<li>${item}</li>`).join('')}</ul><p style="margin-bottom:0"><b>Important:</b> Aceste verificări sunt orientative, nu reprezintă un diagnostic automat.</p></div>`;
+}
 function newGuideHTML(c){
  const fridge=c.kind==='fridge', subject=fridge?'Frigiderul nu răcește':'Ușa nu se închide';
  if(c.step==='newSafety')return `<span class="status">VERIFICARE DE SIGURANȚĂ</span><h2>${subject}</h2><p>${fridge?'Există fum, miros de ars, scântei, cabluri deteriorate sau apă lângă priză?':'Există o persoană blocată, un risc de accidentare sau o ușă de evacuare care nu poate fi folosită?'}</p><div class="note">${fridge?'Nu atinge cabluri sau prize deteriorate și nu desface carcasa aparatului.':'Nu forța ușa, balamalele sau încuietoarea. Dacă este o urgență, cere ajutor imediat.'}</div><div class="actions" style="margin-top:12px"><button class="action alt" data-new="danger">Da / Nu știu</button><button class="action" data-new="safe">Nu, este sigur</button></div>`;
  if(c.step==='newDanger')return `<span class="status danger">OPREȘTE VERIFICAREA</span><h2>Este necesar ajutor calificat</h2><p>${fridge?'Dacă observi fum sau scântei, îndepărtează-te și nu atinge aparatul sau instalația electrică.':'Nu forța accesul și nu bloca ieșirile. Pentru persoane în pericol, solicită imediat ajutor.'}</p><p>În caz de pericol imediat, apelează 112.</p><button class="action red" id="newEmergency">Ajutor urgent / 112</button><button class="action alt" id="newFinish">Salvează cazul</button>`;
- if(c.step==='newCheck')return `<span class="status">OBSERVAȚIE FĂRĂ DEMONTARE</span><h2>${subject}</h2><p>${fridge?'Verifică doar vizual dacă ușa frigiderului se închide complet și dacă există un spațiu liber pentru ventilație. Nu atinge conexiuni electrice.':'Verifică vizual dacă un obiect împiedică închiderea ușii sau dacă aceasta pare deplasată. Nu demonta balamale ori încuietori.'}</p><p>Ai observat o cauză evidentă, care poate fi îndepărtată fără forță și fără unelte?</p><div class="actions"><button class="action" data-new="simple">Da</button><button class="action alt" data-new="unclear">Nu / Nu știu</button><button class="action alt" data-new="specialist">Solicită specialist</button></div>`;
+ if(c.step==='newCheck')return `<span class="status">OBSERVAȚIE FĂRĂ DEMONTARE</span><h2>${subject}</h2><p>${fridge?'Verifică doar vizual dacă ușa frigiderului se închide complet și dacă există un spațiu liber pentru ventilație. Nu atinge conexiuni electrice.':'Verifică vizual dacă un obiect împiedică închiderea ușii sau dacă aceasta pare deplasată. Nu demonta balamale ori încuietori.'}</p>${practicalChecklist(c)}<p>Ai observat o cauză evidentă, care poate fi îndepărtată fără forță și fără unelte?</p><div class="actions"><button class="action" data-new="simple">Da</button><button class="action alt" data-new="unclear">Nu / Nu știu</button><button class="action alt" data-new="specialist">Solicită specialist</button></div>`;
  if(c.step==='newVerify')return `<span class="status">VERIFICAREA REZULTATULUI</span><h2>Verificare finală</h2><p>${fridge?'După închiderea corectă a ușii, răcirea poate necesita timp. Nu declara problema rezolvată fără confirmarea temperaturii adecvate cu un termometru; alimentele perisabile care au stat prea calde pot fi nesigure.':'După îndepărtarea obstacolului, ușa se închide normal, fără forțare?'}</p><div class="actions"><button class="action" data-new="fixed">${fridge?'Temperatura este confirmată':'Da, se închide normal'}</button><button class="action alt" data-new="unverified">Nu / Nu am verificat</button><button class="action alt" data-new="specialist">Necesită specialist</button></div>`;
- return `<span class="status">${esc(statusRO[c.status]||'Neverificată')}</span><h2>Rezultatul</h2><p>${c.status==='RESOLVED'?'Rezultatul a fost confirmat de utilizator.':c.status==='ESCALATED'?'Verificarea a fost oprită. Este recomandat un specialist.':'Cauza sau remedierea nu sunt confirmate. Păstrează cazul pentru urmărire.'}</p><div class="actions"><button class="action alt" id="newRestart">Reia verificarea</button><button class="action" id="newSave">Caz salvat · Vezi istoricul</button></div><p class="muted">Ghid local orientativ. Nu s-a contactat automat niciun specialist.</p>`;
+ return `<span class="status">${esc(statusRO[c.status]||'Neverificată')}</span><h2>Rezultatul</h2><p>${c.status==='RESOLVED'?'Rezultatul a fost confirmat de utilizator.':c.status==='ESCALATED'?'Verificarea a fost oprită. Este recomandat un specialist.':'Cauza sau remedierea nu sunt confirmate. Păstrează cazul pentru urmărire.'}</p>${practicalChecklist(c)}<div class="actions"><button class="action alt" id="newRestart">Reia verificarea</button><button class="action" id="newSave">Caz salvat · Vezi istoricul</button></div><p class="muted">Ghid local orientativ. Nu s-a contactat automat niciun specialist.</p>`;
 }
 function newGuideAction(c,a){
  if(a==='danger'){c.step='newDanger';c.status='ESCALATED'}
@@ -294,7 +308,7 @@ else if(st.screen==='history'){
 }
 else if(st.screen==='reminders'){s.innerHTML=`<h2>Memento</h2><div class="card"><input class="field" id="rt" placeholder="Activitate"><input class="field" id="rd" type="datetime-local"><button class="action" id="ra">Salvează</button><p class="muted">Memento-ul este salvat local; notificările reale nu sunt încă active.</p></div>${st.reminders.map(r=>`<div class="card"><b>${esc(r.text)}</b><div class="muted">${new Date(r.date).toLocaleString('ro-RO')}</div></div>`).join('')}`;$('ra').onclick=()=>{let t=$('rt').value.trim(),d=$('rd').value;if(t&&d){st.reminders.push({text:t,date:d});if(!save()){st.reminders.pop();return;}render()}}}
 else if(st.screen==='saved')s.innerHTML=`<h2>Salvate</h2><div class="card">Aici vor apărea procedurile, documentele, produsele și locurile salvate.</div>`;
-else{s.innerHTML=`<h2>Profil</h2><div class="card"><b>FIRST HELP GUIDE V1.21</b><p class="muted">Datele sunt păstrate local în această instalare. Actualizarea pe aceeași adresă nu necesită import, dar un backup JSON verificat este recomandat înainte de fiecare actualizare.</p><button class="action red" id="clear">Șterge datele locale</button></div>`;$('clear').onclick=()=>{if(confirm('Ștergi definitiv toate cazurile, fotografiile și mementourile de pe acest dispozitiv? Asigură-te că ai exportat și verificat un backup.')){try{localStorage.removeItem(KEY);if(localStorage.getItem(KEY)!==null)throw Error('Ștergerea nu a fost confirmată');st={screen:'home',cases:[],active:null,reminders:[]};render()}catch(e){alert('Ștergerea nu a fost confirmată: '+e.message)}}}}}
+else{s.innerHTML=`<h2>Profil</h2><div class="card"><b>FIRST HELP GUIDE V1.22</b><p class="muted">Datele sunt păstrate local în această instalare. Actualizarea pe aceeași adresă nu necesită import, dar un backup JSON verificat este recomandat înainte de fiecare actualizare.</p><button class="action red" id="clear">Șterge datele locale</button></div>`;$('clear').onclick=()=>{if(confirm('Ștergi definitiv toate cazurile, fotografiile și mementourile de pe acest dispozitiv? Asigură-te că ai exportat și verificat un backup.')){try{localStorage.removeItem(KEY);if(localStorage.getItem(KEY)!==null)throw Error('Ștergerea nu a fost confirmată');st={screen:'home',cases:[],active:null,reminders:[]};render()}catch(e){alert('Ștergerea nu a fost confirmată: '+e.message)}}}}}
 $('menu').onclick=()=>alert('Meniul complet va fi conectat în incrementul următor.');render();
 if ('serviceWorker' in navigator && location.protocol === 'https:') {window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Offline indisponibil:',err)));}
 </script></body></html>

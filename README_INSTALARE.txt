@@ -11,3 +11,7 @@ IMPORTANT: Nu șterge aplicația, datele site-ului sau memoria browserului. Date
 Modificări V1.21: confirmarea scrierii în localStorage; revenire la starea anterioară la eșecul salvării pentru ștergerea unui caz și adăugarea unui memento; confirmare mai explicită la ștergerea tuturor datelor; actualizarea cache-ului PWA.
 
 Limitări: această versiune nu introduce analiză AI a fotografiilor și nu activează notificări reale de memento. Nu există sincronizare cloud automată.
+
+V1.22: checklist de verificare orientativă pentru frigider și ușă, fără demontare.
+Datele rămân sub aceeași cheie locală fhg-v12. Nu șterge datele locale.
+Pentru actualizare, încarcă toate fișierele din arhivă în rădăcina aceluiași repository GitHub Pages, înlocuind versiunile vechi. Fă mai întâi backup JSON.

@@ -1,5 +1,5 @@
-/* FIRST HELP GUIDE V1.21: offline app shell, no data or backup interception. */
-const CACHE='first-help-guide-v121-static';
+/* FIRST HELP GUIDE V1.22: offline app shell, no data or backup interception. */
+const CACHE='first-help-guide-v122-static';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('first-help-guide-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
